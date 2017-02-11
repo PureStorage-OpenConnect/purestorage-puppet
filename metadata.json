@@ -1,0 +1,14 @@
+{
+  "name": "pure-puppet",
+  "version": "0.1.0",
+  "author": "Pure Storage, Inc.",
+  "summary": "This is storage provisioning module and uses puppet device concept.",
+  "license": "Apache-2.0",
+  "source": "https://github.com/PureStorage-OpenConnect/pure-puppet",
+  "project_page": "on Pure Storage - OpenConnect",
+  "issues_url": null,
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ],
+  "data_provider": null
+}
