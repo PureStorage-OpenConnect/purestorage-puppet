@@ -1,8 +1,5 @@
 ## PureStorage Puppet Module
 
-[![Puppet Forge](http://img.shields.io/puppetforge/v/pure/pure.svg)](https://forge.puppetlabs.com/pure/pure)
-**Note: This address will be effective once the module is published on puppetforge.
-
 #### Table of Contents
 
   1. [Disclaimer](#disclaimer)
