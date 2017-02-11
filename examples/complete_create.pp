@@ -26,7 +26,7 @@ node 'cloud-dev-405-a12-02.puretec.purestorage.com' { #--> This is Device name
 #Example of Puppet Agent
 node 'calsoft-puppet-agent.puretec.purestorage.com'{ #--> This is Agent vm name
     #Note : device_url is MANDATORY here.	
-    $device_url = 'https://pureuser:pureuser@cloud-dev-405-a12-02.puretec.purestorage.com'
+    $device_url = 'https://pureuser:******@cloud-dev-405-a12-02.puretec.purestorage.com'
   
      volume{ "pure_storage_volume":
                 #ensure either "present" or "absent"
@@ -56,7 +56,7 @@ node 'calsoft-puppet-agent.puretec.purestorage.com'{ #--> This is Agent vm name
 #Example of Puppet Apply
 node 'puppet.puretec.purestorage.com'{ #--> This is master vm name
     #Note: device_url is MANDATORY here. 		
-    $device_url = 'https://pureuser:pureuser@cloud-dev-405-a12-02.puretec.purestorage.com'
+    $device_url = 'https://pureuser:******@cloud-dev-405-a12-02.puretec.purestorage.com'
 
      volume{ "pure_storage_volume":
                 #ensure either "present" or "absent"
