@@ -56,7 +56,7 @@ in the following order:
 
   1. Any existing connection.
   2. A Facter-supplied URL.
-  3. A user-supplied URL (in `device.conf` or `site.pp` file).
+  3. A user-supplied URL (in `device.conf` or `site.pp` file - examples provided here).
 
 ## Usage
 
