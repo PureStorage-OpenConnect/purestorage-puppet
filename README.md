@@ -112,9 +112,9 @@ Command: "puppet apply <manifest_file_path>"
 ## Supported use-cases:
 
    1. create \ update \ delete volume
-        * Array of iqn-list supported
-        eg.  host_iqnlist =>  ["iqn.1994-04.jp.co.pure:rsd.d9s.t.10103.0e03j","iqn.1994-04.jp.co.pure:rsd.d9s.t.10103.0e03k"],
-        ** volume size cannot be reduced REST API constraint.
+      * Array of iqn-list supported
+        ** eg.  host_iqnlist =>  ["iqn.1994-04.jp.co.pure:rsd.d9s.t.10103.0e03j","iqn.1994-04.jp.co.pure:rsd.d9s.t.10103.0e03k"],
+      * volume size cannot be reduced REST API constraint.
    2. create \ update \ delete host
    3. create \ delete connection
 
