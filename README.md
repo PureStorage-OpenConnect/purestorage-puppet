@@ -63,13 +63,13 @@ in the following order:
 ### Puppet Device
 
 The Puppet Network Device system is a way to configure devices' (switches,
-routers, storage) which do not have the ability to run puppet agent on
+routers, storage) which do not have the ability to run a puppet agent on
 the devices. The device application acts as a smart proxy between the Puppet
-Master and the managed network device. To do this, puppet device will
-sequentially connects to the master on behalf of the managed network device
-and will ask for a catalog (a catalog containing only network device
+Master and the managed device. To do this, puppet device will
+sequentially connects to the master on behalf of the managed device
+and will ask for a catalog (a catalog containing only the device
 resources). It will then apply this catalog to the said device by translating
-the resources to orders the network device understands. Puppet device will
+the resources to orders the managed device understands. Puppet device will
 then report back to the master for any changes and failures as a standard node.
 
 The Pure Storage providers are designed to work with the puppet device concept and
@@ -83,7 +83,7 @@ in Puppet's `device.conf` file. An example is shown below:
 In the case of Puppet Device connection to the Pure Storage is from the machine
 running 'device' only.
 
-command : "puppet device"
+command : `puppet device`
 
 ### Puppet Agent
 
@@ -95,9 +95,9 @@ as a URL. See the example manifests (complete_create.pp) for details.
 
 In the case of Puppet Agent, connections to the Pure Storage array will be
 initiated from every machine which utilizes the Pure Storage puppet module this
-way. This may be of security concern for some folks.
+way.
 
-Command: "puppet agent -t"
+Command: `puppet agent -t`
 
 ### Puppet Apply
 
@@ -106,27 +106,27 @@ is supported similar to puppet agent by the Pure Storage providers.
 The connection string must be supplied as a URL. See the example 
 manifests (complete_create.pp) for details.
 
-Command: "puppet apply <manifest_file_path>"
-	e.g. "puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp"
+Command: `puppet apply <manifest_file_path>`
+   e.g. `puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp`
 
 ## Supported use-cases:
 
    1. create \ update \ delete volume
       * Array of iqn-list supported
         - eg.  host_iqnlist =>  ["iqn.1994-04.jp.co.pure:rsd.d9s.t.10103.0e03j","iqn.1994-04.jp.co.pure:rsd.d9s.t.10103.0e03k"],
-      * volume size cannot be reduced REST API constraint.
+      * volume size cannot be reduced due to a RestAPI constraint.
    2. create \ update \ delete host
    3. create \ delete connection
 
 ## Limitations
 
-Today the Pure Storage puppet module supports create, update, delete of 
-volume, host and direct connection (between the two). 
+Today the Pure Storage puppet module supports create, update and delete of 
+volumes, hosts and attachment between the two. 
 Currently it only supports iSCSI connections and IQN ids.
 
 ## Development
 
-Please see the [Pure Storage](https://www.purestorage.com/support.html) for any issues,
+Please see the [Pure Storage Support website](https://www.purestorage.com/support.html) for any issues,
 discussion, advice or contribution(s).
 
 To get started with developing this module, you'll need a functioning Ruby installation.
