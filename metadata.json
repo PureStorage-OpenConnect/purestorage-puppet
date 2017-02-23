@@ -2,7 +2,7 @@
   "name": "pure-puppet",
   "version": "0.1.0",
   "author": "Pure Storage, Inc.",
-  "summary": "This is storage provisioning module and uses puppet device concept.",
+  "summary": "This is a storage provisioning module that uses the puppet device concept.",
   "license": "Apache-2.0",
   "source": "https://github.com/PureStorage-OpenConnect/pure-puppet",
   "project_page": "on Pure Storage - OpenConnect",
