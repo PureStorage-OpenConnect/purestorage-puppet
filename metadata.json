@@ -1,6 +1,6 @@
 {
   "name": "purestorage-puppet",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Pure Storage, Inc.",
   "summary": "This is a storage provisioning module that uses the puppet device concept to manage a Pure Storage FlashArray.",
   "license": "Apache-2.0",
