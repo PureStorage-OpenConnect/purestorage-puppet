@@ -1,5 +1,5 @@
 {
-    "id": "pure-puppet",
+    "id": "purestorage-puppet",
     "filter": "devops",
     "image": "http://code.purestorage.com/images/18_puppet.png",
     "featured": 1,

@@ -1,5 +1,5 @@
 {
-  "name": "pure-puppet",
+  "name": "purestorage-puppet",
   "version": "0.1.0",
   "author": "Pure Storage, Inc.",
   "summary": "This is a storage provisioning module that uses the puppet device concept.",
