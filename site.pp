@@ -24,7 +24,7 @@ node 'cloud-dev-405-a12-02.puretec.purestorage.com' { #--> This is Device name
 
 }
 #Example of Puppet Agent
-node 'calsoft-puppet-agent.puretec.purestorage.com'{ #--> This is Agent vm name
+node 'puppet-agent.puretec.purestorage.com'{ #--> This is Agent vm name
     #Note : device_url is MANDATORY here.	
     $device_url = 'https://pureuser:pureuser@cloud-dev-405-a12-02.puretec.purestorage.com'
 
