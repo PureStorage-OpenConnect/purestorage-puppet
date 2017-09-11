@@ -4,8 +4,8 @@
   "author": "Pure Storage, Inc.",
   "summary": "This is a storage provisioning module that uses the puppet device concept to manage a Pure Storage FlashArray.",
   "license": "Apache-2.0",
-  "source": "https://github.com/PureStorage-OpenConnect/pure-puppet",
-  "project_page": "https://github.com/PureStorage-OpenConnect/pure-puppet",
+  "source": "https://github.com/PureStorage-OpenConnect/purestorage-puppet",
+  "project_page": "https://github.com/PureStorage-OpenConnect/purestorage-puppet",
   "issues_url": null,
   "dependencies": [
     {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
