@@ -2,6 +2,6 @@
     "id": "purestorage-puppet",
     "filter": "devops",
     "image": "http://code.purestorage.com/images/18_puppet.png",
-    "featured": 1,
+    "featured": 0,
     "priority": 2
 }
