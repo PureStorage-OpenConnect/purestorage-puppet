@@ -1,1 +1,12 @@
-pkg
+pkg/
+/metadata.json
+coverage/
+.rvmrc
+Gemfile.lock
+.coveralls.yml
+*.swp
+spec/fixtures/manifests/
+spec/fixtures/modules/
+.bundle/
+log/
+.ruby-*

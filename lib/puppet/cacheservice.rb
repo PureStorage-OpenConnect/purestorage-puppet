@@ -20,7 +20,7 @@ class CacheService
   #------------------------------------------------------------------------------------
   def getOsTmpDir
     tmpFileName = Dir.tmpdir()
-    Puppet.debug("@@@@@ OS specific tmp file path is : "+ tmpFileName)
+    Puppet.debug("@@@@ OS specific tmp file path is : "+ tmpFileName)
     return tmpFileName
   end
   

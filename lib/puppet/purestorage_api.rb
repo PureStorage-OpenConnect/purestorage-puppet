@@ -29,52 +29,47 @@ class PureStorageApi
   
   attr_accessor :url
   
-  #------------------------------------------------------------------------------------
+  # #------------------------------------------------------------------------------------
+  # # Constructor
+  # #------------------------------------------------------------------------------------
+  # def initialize(url)
+  #   @url = URI.parse(url)
+  #   @deviceIp = @url.host
+  #   @userName = @url.user
+  #   @password = @url.password
+  #   @restVersion = REST_VERSION
+  #   #Base URI is ... https://m70.purecloud.local/api/1.6
+  #   @baseUri = "https://" + @deviceIp + "/api/"+@restVersion
+  #   @cacheService = CacheService.new(@deviceIp)
+
+  #   #Delete Cache if its expired.
+  #   if(@cacheService.isCacheExpired)
+  #    # puts "Cache is expired, hence deleting file :" + @deviceIp
+  #    Puppet.debug "Cache is expired, hence deleting file :" + @deviceIp
+  #     @cacheService.deleteCache()
+  #   end
+  # end
+
+  # -----------------------------------------------------------------------------------
   # Constructor
-  #------------------------------------------------------------------------------------
-  def initialize(url)
-    Puppet.debug("Device url : "+ url)
-    @url = URI.parse(url)
-    @deviceIp = @url.host
-    Puppet.debug("Device ip : "+ @deviceIp)
-    @userName = @url.user
-    Puppet.debug("Device user : "+ @userName)
-    @password = @url.password
-    Puppet.debug("Device password : "+ @password)
-    @restVersion = REST_VERSION
+  # -----------------------------------------------------------------------------------
+  def initialize(deviceIp,userName,password,restVersion)
+    @deviceIp = deviceIp
+    @userName = userName
+    @password = password
+    @restVersion = restVersion
     #Base URI is ... https://m70.purecloud.local/api/1.6
-    @baseUri = "https://" + @deviceIp + "/api/"+@restVersion
-    @cacheService = CacheService.new(@deviceIp)
-    
+    @baseUri = "https://" + deviceIp + "/api/"+restVersion
+    @cacheService = CacheService.new(deviceIp)
+
     #Delete Cache if its expired.
     if(@cacheService.isCacheExpired)
-     # puts "Cache is expired, hence deleting file :" + @deviceIp
-     Puppet.debug "Cache is expired, hence deleting file :" + @deviceIp
+    # puts "Cache is expired, hence deleting file :" + @deviceIp
+    Puppet.debug "Cache is expired, hence deleting file :" + @deviceIp
       @cacheService.deleteCache()
     end       
-  end 
-  #------------------------------------------------------------------------------------
-  # Constructor
-  #------------------------------------------------------------------------------------  
-#  def initialize(deviceIp,userName,password,restVersion)
-#    @deviceIp = deviceIp
-#    @userName = userName
-#    @password = password
-#    @restVersion = restVersion
-#    #Base URI is ... https://m70.purecloud.local/api/1.6
-#    @baseUri = "https://" + deviceIp + "/api/"+restVersion
-#    @cacheService = CacheService.new(deviceIp)
-#    
-#    #Delete Cache if its expired.
-#    if(@cacheService.isCacheExpired)
-#     # puts "Cache is expired, hence deleting file :" + @deviceIp
-#     Puppet.debug "Cache is expired, hence deleting file :" + @deviceIp
-#      @cacheService.deleteCache()
-#    end       
-#  end
-  
-  
-      
+  end
+
   #------------------------------------------------------------------------------------
   # Step 1 : Create Token 
   # e.g.
