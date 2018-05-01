@@ -11,10 +11,10 @@ class Puppet::Util::NetworkDevice::Pure::Facts
   def retrieve
     Puppet.debug("Fetching facts from Pure Array")
     array_info = @transport.getRestCall('/array')
-    Puppet.debug("Returned array info = #{array_info.inspect}")
+    Puppet.debug("Returned array info: #{array_info.inspect}")
 
     controller_info = @transport.getRestCall('/array?controllers=true')
-    Puppet.debug("Returned controller info =#{controller_info.inspect}")
+    Puppet.debug("Returned controller info: #{controller_info.inspect}")
 
     @facts = {}
     @facts['array_name']  = array_info[:array_name]
