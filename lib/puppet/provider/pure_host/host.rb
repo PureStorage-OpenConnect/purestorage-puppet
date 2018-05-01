@@ -6,60 +6,63 @@ require 'puppet/util/network_device/pure/device'
 
 Puppet::Type.type(:pure_host).provide(:host,
                                 :parent => Puppet::Provider::Pure) do
-    desc "Provider for PureStorage host."
+  desc "Provider for PureStorage host."
 
-    def create
-       Puppet.debug("<<<<<<<<<< Inside hostconfig create & operation:"+@operation)	
-      transport.executeHostRestApi(@operation,@host_name,@host_iqnlist)	
+  mk_resource_methods
+
+  def self.instances
+    hosts = []
+
+    # Get a list of hosts from Pure array
+    results = transport.getRestCall('/host')
+    Puppet.debug("Got a host result set from Pure: #{results.inspect}")
+
+    results.each do |host|
+      host_hash = {
+        :name    => host['name'],
+        :ensure  => :present,
+        :iqnlist => host['iqn'],
+        :wwnlist => host['wwn']
+      }
+
+      Puppet.debug("Host resource looks like: #{host_hash.inspect}")
+      hosts << new(host_hash)
     end
 
-    def destroy
-       Puppet.debug("<<<<<<<<<< Inside hostconfig destroy & operation:"+@operation)
-      transport.executeHostRestApi(@operation,@host_name,@host_iqnlist)	
+    hosts
+  end
+
+  def self.prefetch(resources)
+    instances.each do |prov|
+      if resource = resources[prov.name]
+        resource.provider = prov
+      end
     end
+  end
 
-    def exists?
-       Puppet.debug("<<<<<<<<<< Inside hostconfig exists?")
-      	@host_name =  resource[:host_name]
-      	@host_iqnlist = resource[:host_iqnlist]
-      	@ensure = resource[:ensure]
-      	@url  = resource[:device_url]
-      	   
-      	#@host_wwnlist = resource[:host_wwnlist]
-       	Puppet.debug "host_name :" + @host_name
-        Puppet.debug "host_iqnlist :" + @host_iqnlist.to_s
-        Puppet.debug "ensure :" + @ensure.to_s
-        #Puppet.debug "host_wwnlist :" + @host_wwnlist
-        Puppet.debug "url :" + @url.to_s
+  def flush
+    Puppet.debug("Flushing resource #{resource[:name]}: #{resource.inspect}")
+    if @property_hash[:ensure] == :absent
+      transport.executeHostRestApi(self.class::DELETE, resource[:name])
+    else
+      Puppet.debug("Updating host resource")
+      transport.executeHostRestApi(self.class::UPDATE, resource[:name], resource[:iqnlist], resource[:wwnlist])
+    end
+  end
 
-        # Set FACT for URL        
-        if(!@url.to_s.nil?)
-          command_echo = 'echo '+@url.to_s
-          Facter.add(:url) do
-            setcode command_echo 
-          end 
-        end     
-        
-        #Check host existence  
-        isExists =  transport.isHostExists(@host_name,@host_iqnlist)
-        
-       Puppet.info("\n Is host: '"+@host_name+"' exists? "+ isExists.to_s)
-      
-        #Decide which operation to do Create\Update\Delete         
-        if(@ensure == :present)
-             if(isExists)
-               @operation= self.class::UPDATE #"update"
-               isExists = false  
-             else
-               @operation= self.class::CREATE #"create"
-             end  
-         elsif(@ensure == :absent)
-             @operation= self.class::DELETE #"delete"
-         end
+  def create
+    Puppet.debug("<<<<<<<<<< Inside hostconfig create for host #{resource[:name]}")
+    transport.executeHostRestApi(self.class::CREATE, resource[:name], resource[:iqnlist], resource[:wwnlist])
+  end
 
-      Puppet.debug("<<<<<<<<<< Operation to perform? "+ @operation)
-      return isExists
-   end
+  def destroy
+    Puppet.debug("Triggering destroy for #{resource[:name]}")
+    @property_hash[:ensure] = :absent
+  end
+
+  def exists?
+    Puppet.debug("Checking existence...")
+    @property_hash[:ensure] == :present
+  end
+
 end
-
-

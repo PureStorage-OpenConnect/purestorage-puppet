@@ -380,11 +380,11 @@ class PureStorageApi
     end      
   end
   
- #----------------------------------------------------
- # This method checks if volume with given name exists
- # It is dedicated to hosts
- #-----------------------------------------------
- def isHostExists(arg_host_name, arg_host_iqnlist)
+  #----------------------------------------------------
+  # This method checks if volume with given name exists
+  # It is dedicated to hosts
+  #-----------------------------------------------
+  def isHostExists(arg_host_name, arg_host_iqnlist)
     url = "/host/"+arg_host_name
     output = getRestCall(url)
     
@@ -393,32 +393,33 @@ class PureStorageApi
     else
        return false
     end
- end
- #-------------------------------------------------
- # Its a controller method which decides 
- # which rest api to call depending on key
- # It is dedicated to Hosts
- #-----------------------------------------------
- def executeHostRestApi(arg_key,*arg)
-   Puppet.info(arg_key + " Action for host:"+ arg[0])
-   case arg_key
-   when LIST  then
-     getRestCall("/host")
-   when  CREATE then #arg[0] = volume_name, arg[1] = volume_size
-       url = "/host/"+arg[0]
-       body = Hash.new("iqnlist" => arg[1])
-       postRestCall(url,body["iqnlist"])
-   when  UPDATE then
-       url = "/host/"+arg[0]
-       body = Hash.new("iqnlist" => arg[1]) 
-       putRestCall(url,body["iqnlist"])
-   when  DELETE then
-       url = "/host/"+arg[0]
-       deleteRestCall(url)
-   else
-     Puppet.err("Invalid Option:" + arg_key)
-   end      
- end 
+  end
+
+  #-------------------------------------------------
+  # Its a controller method which decides
+  # which rest api to call depending on key
+  # It is dedicated to Hosts
+  #-----------------------------------------------
+  def executeHostRestApi(arg_key,*arg)
+    Puppet.info(arg_key + " Action for host:"+ arg[0])
+    case arg_key
+    when LIST  then
+      getRestCall("/host")
+    when  CREATE then #arg[0] = volume_name, arg[1] = volume_size
+      url = "/host/"+arg[0]
+      body = Hash.new("iqnlist" => arg[1], "wwnlist" => arg[2])
+      postRestCall(url,body)
+    when  UPDATE then
+      url = "/host/"+arg[0]
+      body = Hash.new("iqnlist" => arg[1], "wwnlist" => arg[2])
+      putRestCall(url,body)
+    when  DELETE then
+      url = "/host/"+arg[0]
+      deleteRestCall(url)
+    else
+      Puppet.err("Invalid Option:" + arg_key)
+    end
+  end
  
 #----------------------------------------------------
 # This method checks if connection with given name exists
