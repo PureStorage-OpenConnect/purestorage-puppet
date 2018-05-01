@@ -10,3 +10,4 @@ spec/fixtures/modules/
 .bundle/
 log/
 .ruby-*
+*.DS_Store
