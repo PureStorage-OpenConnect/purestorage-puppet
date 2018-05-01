@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Puppet::Type.type(:pure_volume).provider(:volume) do
 
   before :each do
-    Puppet::Type.type(:pure_volume).stub(:defaultprovider).and_return described_class
+    allow(Puppet::Type.type(:pure_volume)).to receive(:defaultprovider).and_return described_class
     @transport = double(:transport)
     @device    = double(:device)
     allow(@device).to receive(:transport) { @transport }
@@ -26,11 +26,11 @@ describe Puppet::Type.type(:pure_volume).provider(:volume) do
   describe 'when asking exists?' do
     it 'should return true if resource is present' do
       resource.provider.set(:ensure => :present)
-      resource.provider.should be_exists
+      expect(resource.provider).to be_exists
     end
     it 'should return false if resource is absent' do
       resource.provider.set(:ensure => :absent)
-      resource.provider.should_not be_exists
+      expect(resource.provider).to_not be_exists
     end
   end
 
@@ -40,15 +40,15 @@ describe Puppet::Type.type(:pure_volume).provider(:volume) do
       allow(described_class).to receive(:transport) { @transport }
 
       instances = described_class.instances
-      instances.size.should eq(2)
+      expect(instances.size).to eq(2)
 
-      instances.map do |prov|
+      expect(instances.map do |prov|
         {
           :name   => prov.get(:name),
           :ensure => prov.get(:ensure),
           :size   => prov.get(:size)
         }
-      end.should == [
+      end).to eq([
         {
           :name   => 'vol1',
           :ensure => resource[:ensure],
@@ -58,7 +58,8 @@ describe Puppet::Type.type(:pure_volume).provider(:volume) do
           :name   => 'vol2',
           :ensure => resource[:ensure],
           :size   => '14T'
-        }]
+        }
+      ])
     end
 
     describe '#prefetch' do

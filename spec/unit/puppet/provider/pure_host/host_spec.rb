@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Puppet::Type.type(:pure_host).provider(:host) do
 
   before :each do
-    Puppet::Type.type(:pure_host).stub(:defaultprovider).and_return described_class
+    allow(Puppet::Type.type(:pure_host)).to receive(:defaultprovider).and_return described_class
     @transport = double(:transport)
     @device    = double(:device)
     allow(@device).to receive(:transport) { @transport }
@@ -25,11 +25,11 @@ describe Puppet::Type.type(:pure_host).provider(:host) do
   describe 'when asking exists?' do
     it 'should return true if resource is present' do
       resource.provider.set(:ensure => :present)
-      resource.provider.should be_exists
+      expect(resource.provider).to be_exists
     end
     it 'should return false if resource is absent' do
       resource.provider.set(:ensure => :absent)
-      resource.provider.should_not be_exists
+      expect(resource.provider).to_not be_exists
     end
   end
 
@@ -39,23 +39,23 @@ describe Puppet::Type.type(:pure_host).provider(:host) do
       allow(described_class).to receive(:transport) { @transport }
 
       instances = described_class.instances
-      instances.size.should eq(1)
+      expect(instances.size).to eq(1)
 
-      instances.map do |prov|
+      expect(instances.map do |prov|
         {
           :name    => prov.get(:name),
           :ensure  => prov.get(:ensure),
           :iqnlist => prov.get(:iqnlist),
           :wwnlist => prov.get(:wwnlist),
         }
-      end.should == [
+      end).to eq([
         {
           :name    => 'host01',
           :ensure  => resource[:ensure],
           :iqnlist => [ '123456' ],
           :wwnlist => [ '51402EC0017AA6B4' ]
         }
-      ]
+      ])
     end
 
     describe '#prefetch' do
