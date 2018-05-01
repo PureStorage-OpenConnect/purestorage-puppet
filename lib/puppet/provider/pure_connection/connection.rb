@@ -4,7 +4,7 @@ require 'puppet/provider/pure'
 require 'puppet/util/network_device'
 require 'puppet/util/network_device/pure/device'
 
-Puppet::Type.type(:connection).provide(:connection,
+Puppet::Type.type(:pure_connection).provide(:connection,
                                 :parent => Puppet::Provider::Pure) do
     desc "This is a provider for creating private connection between host and volume."
 
