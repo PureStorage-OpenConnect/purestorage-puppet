@@ -5,15 +5,15 @@ describe Puppet::Type.type(:pure_volume).provider(:volume) do
   before :each do
     Puppet::Type.type(:pure_volume).stub(:defaultprovider).and_return described_class
     @transport = double(:transport)
-    @device = double(:device)
+    @device    = double(:device)
     allow(@device).to receive(:transport) { @transport }
   end
 
   let :resource do
     Puppet::Type.type(:pure_volume).new(
-      :volume_name => 'pure_vol',
-      :ensure      => :present,
-      :volume_size => '10G'
+      :name   => 'pure_vol',
+      :ensure => :present,
+      :size   => '10G'
     )
   end
 
@@ -44,9 +44,9 @@ describe Puppet::Type.type(:pure_volume).provider(:volume) do
 
       instances.map do |prov|
         {
-          :name   => prov.get(:volume_name),
+          :name   => prov.get(:name),
           :ensure => prov.get(:ensure),
-          :size   => prov.get(:volume_size)
+          :size   => prov.get(:size)
         }
       end.should == [
         {
@@ -84,20 +84,20 @@ describe Puppet::Type.type(:pure_volume).provider(:volume) do
       it 'should be able to delete it' do
         expect(@transport).to receive(:executeVolumeRestApi).with('delete', 'pure_vol')
         allow(resource.provider).to receive(:transport) { @transport }
-        resource.provider.set(:volume_name => 'pure_vol')
+        resource.provider.set(:name => 'pure_vol')
         resource.provider.destroy
         resource.provider.flush
       end
     end
 
     describe 'when modifying a volume' do
-      describe 'for #volume_size=' do
+      describe 'for #size=' do
         it "should be able to increase a volume size" do
           expect(@transport).to receive(:executeVolumeRestApi).with('update', 'pure_vol', '20G')
           allow(resource.provider).to receive(:transport) { @transport }
-          # resource.provider.set(:volume_name => 'pure_vol', :volume_size => '10G')
-          resource[:volume_size] = '20G'
-          resource.provider.send("volume_size=", '20G')
+          # resource.provider.set(:name => 'pure_vol', :size => '10G')
+          resource[:size] = '20G'
+          resource.provider.send("size=", '20G')
         end
       end
     end

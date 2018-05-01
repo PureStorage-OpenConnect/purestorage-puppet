@@ -1,6 +1,4 @@
 require 'net/http'
-require 'facter'
-
 require 'puppet/purestorage_api'
 require 'puppet/provider/pure'
 require 'puppet/util/network_device'
@@ -21,8 +19,8 @@ Puppet::Type.type(:pure_volume).provide(:volume,
     results.each do |volume|
       Puppet.debug("Volume: #{volume.inspect}")
       volume_hash = {
-        :volume_name => volume['name'],
-        :ensure      => :present
+        :name   => volume['name'],
+        :ensure => :present
       }
 
       # Need to convert from bytes to biggest possible unit
@@ -39,7 +37,7 @@ Puppet::Type.type(:pure_volume).provide(:volume,
       else
         vol_size = vol_size_mb.to_s + "M"
       end
-      volume_hash[:volume_size] = vol_size
+      volume_hash[:size] = vol_size
 
       Puppet.debug("Volume_hash looks like: #{volume_hash}")
 
@@ -52,26 +50,26 @@ Puppet::Type.type(:pure_volume).provide(:volume,
 
   def self.prefetch(resources)
     instances.each do |prov|
-      if resource = resources[prov.volume_name]
+      if resource = resources[prov.name]
         resource.provider = prov
       end
     end
   end
 
   def flush
-    Puppet.debug("Flushing resource #{resource[:volume_name]}: #{resource.inspect}")
+    Puppet.debug("Flushing resource #{resource[:name]}: #{resource.inspect}")
     if @property_hash[:ensure] == :absent
-      transport.executeVolumeRestApi(self.class::DELETE, resource[:volume_name])
+      transport.executeVolumeRestApi(self.class::DELETE, resource[:name])
     end
   end
 
   def create
-    Puppet.debug("<<<<<<<<<< Inside volume create for volume: #{resource[:volume_name]} ")
-    transport.executeVolumeRestApi(self.class::CREATE, resource[:volume_name], resource[:volume_size])
+    Puppet.debug("<<<<<<<<<< Inside volume create for volume: #{resource[:name]} ")
+    transport.executeVolumeRestApi(self.class::CREATE, resource[:name], resource[:size])
   end
 
   def destroy
-    Puppet.debug("Triggering destroy for #{resource[:volume_name]}")
+    Puppet.debug("Triggering destroy for #{resource[:name]}")
     @property_hash[:ensure] = :absent
   end
 
@@ -80,10 +78,10 @@ Puppet::Type.type(:pure_volume).provide(:volume,
     @property_hash[:ensure] == :present
   end
 
-  # Volume_size setter
-  def volume_size=(value)
-    Puppet.debug("Puppet::Provider::Volume volume_size=: setting volume size for volume #{resource[:volume_name]}")
-    transport.executeVolumeRestApi(self.class::UPDATE, resource[:volume_name], value)
+  # size setter
+  def size=(value)
+    Puppet.debug("Puppet::Provider::Volume size=: setting volume size for volume #{resource[:name]}")
+    transport.executeVolumeRestApi(self.class::UPDATE, resource[:name], value)
   end
 end
 
