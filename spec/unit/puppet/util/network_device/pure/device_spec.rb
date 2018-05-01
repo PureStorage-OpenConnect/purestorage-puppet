@@ -29,23 +29,19 @@ describe Puppet::Util::NetworkDevice::Pure::Device do
 
     describe 'with valid config' do
       before(:each) do
-        @transport = stub_everything 'pure array', :is_a? => true, :command => ""
-        @pure = Puppet::Util::NetworkDevice::Pure::Device.new("https://admin:secre@pure01.example.com")
-        @pure.transport = @transport
+        @transport = double(:pure_array)
       end
 
       it "should connect to the specificed Pure array" do
-        Puppet.expects(:debug).at_least_once
-
+        expect(PureStorageApi).to receive(:new).with('pure01.example.com', 'admin', 'secret', '1.6') { @transport }
         pure = described_class.new('https://admin:secret@pure01.example.com')
         expect(pure.api_version).to eq('1.6')
       end
 
       describe 'with an api_version provided' do
         it "should connect to the specificed api version" do
-          Puppet.expects(:debug).at_least_once
-
-          pure = described_class.new('https://admin:secret@pure01.example.com?api_version=1.12')
+          expect(PureStorageApi).to receive(:new).with('pure01.example.com', 'admin', 'secret', '1.12') { @transport }
+          pure = described_class.new('https://admin:secret@pure01.example.com/?api_version=1.12')
           expect(pure.api_version).to eq('1.12')
         end
       end

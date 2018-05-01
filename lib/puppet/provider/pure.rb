@@ -13,6 +13,8 @@ class Puppet::Provider::Pure < Puppet::Provider
    UPDATE            = "update"
    DELETE            = "delete"
     
+  attr_accessor :device
+
   def self.transport(args=nil)
     @device ||= Puppet::Util::NetworkDevice.current
     if not @device and Facter.value(:url)
