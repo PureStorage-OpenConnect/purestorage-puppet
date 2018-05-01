@@ -59,6 +59,7 @@ Puppet::Type.type(:pure_volume).provide(:volume,
   end
 
   def flush
+    Puppet.debug("Flushing resource #{resource[:volume_name]}: #{resource.inspect}")
     if @property_hash[:ensure] == :absent
       transport.executeVolumeRestApi(self.class::DELETE, resource[:volume_name])
     end
@@ -75,13 +76,14 @@ Puppet::Type.type(:pure_volume).provide(:volume,
   end
 
   def exists?
+    Puppet.debug("Checking existence...")
     @property_hash[:ensure] == :present
   end
 
   # Volume_size setter
   def volume_size=(value)
     Puppet.debug("Puppet::Provider::Volume volume_size=: setting volume size for volume #{resource[:volume_name]}")
-    transport.executeVolumeRestApi(self.class::UPDATE, resource[:volume_name], resource[:volume_size])
+    transport.executeVolumeRestApi(self.class::UPDATE, resource[:volume_name], value)
   end
 end
 

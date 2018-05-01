@@ -19,7 +19,7 @@ describe Puppet::Type.type(:pure_volume).provider(:volume) do
 
   let :provider do
     described_class.new(
-      :name => 'pure_volume'
+      :name => 'pure_vol'
     )
   end
 
@@ -93,10 +93,11 @@ describe Puppet::Type.type(:pure_volume).provider(:volume) do
     describe 'when modifying a volume' do
       describe 'for #volume_size=' do
         it "should be able to increase a volume size" do
-          resource[:volume_size] = '20G'
           expect(@transport).to receive(:executeVolumeRestApi).with('update', 'pure_vol', '20G')
           allow(resource.provider).to receive(:transport) { @transport }
-          resource.provider.flush
+          # resource.provider.set(:volume_name => 'pure_vol', :volume_size => '10G')
+          resource[:volume_size] = '20G'
+          resource.provider.send("volume_size=", '20G')
         end
       end
     end
