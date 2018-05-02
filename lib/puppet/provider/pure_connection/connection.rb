@@ -6,42 +6,57 @@ require 'puppet/util/network_device/pure/device'
 
 Puppet::Type.type(:pure_connection).provide(:connection,
                                 :parent => Puppet::Provider::Pure) do
-    desc "This is a provider for creating private connection between host and volume."
+  desc "This is a provider for creating private connection between host and volume."
 
-    def create
-       Puppet.debug("<<<<<<<<<< Inside connection create")	
-      transport.executeConnectionRestApi(self.class::CREATE,@host_name,@volume_name)	
+  mk_resource_methods
+
+  def self.instances
+    connections = []
+
+    # Get a list of volume connections from Pure array
+    results = transport.getRestCall('/volume?connect=true')
+    Puppet.debug("Got results: #{results.inspect}")
+
+    results.each do |connection|
+      connection_hash = {
+        :host_name   => connection['host'],
+        :ensure      => :present,
+        :volume_name => connection['name']
+      }
+
+      Puppet.debug("Connection resource looks like: #{connection_hash.inspect}")
+      connections << new(connection_hash)
     end
 
-    def destroy
-       Puppet.debug("<<<<<<<<<< Inside connection destroy")
-      transport.executeConnectionRestApi(self.class::DELETE,@host_name,@volume_name)	
-    end
+    connections
+  end
 
-    def exists?
-       Puppet.debug("<<<<<<<<<< Inside connection exists?")
-       @host_name =  resource[:host_name]
-       @volume_name =  resource[:volume_name]
-       @url  = resource[:device_url] 
-         
-       	Puppet.debug("host_name :" + @host_name)
-        Puppet.debug("volume_name :" + @volume_name)
-        Puppet.debug("url :" + @url.to_s)
-        
-        #Set FACT for "url"
-        if(!@url.to_s.nil?)
-              command_echo = 'echo '+@url.to_s
-              Facter.add(:url) do
-                setcode command_echo 
-              end 
-        end     
-       
-        #Check connection existence     
-       isExists =  transport.isConnectionExists(@host_name,@volume_name)
-       
-       Puppet.info("\n Is connection between host :'"+@host_name+"' and volume: '"+ @volume_name +"' exists? "+ isExists.to_s)
-      return isExists
+  def self.prefetch(resources)
+    catalog = resources.values.first.catalog
+    instances.each do |prov|
+      catalog.resources.each do |item|
+        if item.class.to_s == 'Puppet::Type::Pure_connection' \
+          && item[:host_name] == prov.host_name \
+          && item.parameter('volume_name').value == prov.volume_name
+          item.provider = prov
+        end
+      end
     end
+  end
+
+  def create
+    Puppet.debug("<<<<<<<<<< Inside connection create")
+    transport.executeConnectionRestApi(self.class::CREATE,resource[:host_name],resource[:volume_name])
+  end
+
+  def destroy
+    Puppet.debug("<<<<<<<<<< Inside connection destroy")
+    transport.executeConnectionRestApi(self.class::DELETE,resource[:host_name],resource[:volume_name])
+  end
+
+  def exists?
+    @property_hash[:ensure] == :present
+  end
+
 end
-
 

@@ -2,7 +2,7 @@ Puppet::Type.newtype(:pure_connection) do
   @doc = "It does CRUD operations for Host-volume Connection on a Pure Storage flash array."
 
   validate do
-    raise ArgumentError, "host name and volume name are mandatory" if !self[:host_name] || !self[:volume_name]
+    raise ArgumentError, "host name and volume name are mandatory" if value(:host_name).nil? || value(:volume_name).nil?
   end
 
   apply_to_all
