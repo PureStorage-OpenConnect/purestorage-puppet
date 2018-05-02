@@ -421,20 +421,21 @@ class PureStorageApi
     end
   end
  
-#----------------------------------------------------
-# This method checks if connection with given name exists
-# It is dedicated to volumes
-# -----------------------------------------------
-def isConnectionExists(arg_host_name, arg_volume_name)
-   url = "/host/"+arg_host_name+"/volume"
-   output = getRestCall(url)
+  #----------------------------------------------------
+  # This method checks if connection with given name exists
+  # It is dedicated to volumes
+  # -----------------------------------------------
+  def isConnectionExists(arg_host_name, arg_volume_name)
+     url = "/host/"+arg_host_name+"/volume"
+     output = getRestCall(url)
 
-   if(output["vol"]!=nil)
-     return true
-   else
-      return false
-   end
-end
+     if(output["vol"]!=nil)
+       return true
+     else
+        return false
+     end
+  end
+
   #-------------------------------------------------
   # Its a controller method which decides 
   # which rest api to call depending on key
