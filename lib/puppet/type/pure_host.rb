@@ -4,11 +4,9 @@ Puppet::Type.newtype(:pure_host) do
   apply_to_all
   ensurable
   
-  newparam(:name, :namevar => true) do
+  newparam(:name) do
     desc "The name of the host."
-    validate do |value|
-      fail("host name can not be empty or null: #{value}") if value == "null" or value.strip.empty?
-    end
+    isnamevar
   end
   
   newproperty(:iqnlist, :array_matching => :all) do

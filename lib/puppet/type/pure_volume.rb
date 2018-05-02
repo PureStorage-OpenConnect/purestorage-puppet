@@ -2,7 +2,7 @@ Puppet::Type.newtype(:pure_volume) do
   @doc = "It does CRUD operations for volumes on a Pure Storage flash array."
 
   validate do
-    raise ArgumentError, "size attribute is mandatory" if !self[:size]
+    raise ArgumentError, "size attribute is mandatory" if value(:size).nil?
   end 
 
   apply_to_all
@@ -11,14 +11,9 @@ Puppet::Type.newtype(:pure_volume) do
   newparam(:name) do
     desc "The name of the volume."
     isnamevar
-    validate do |value|
-      unless value =~ /^\w+$/
-        raise ArgumentError, "%s is not a valid volume name." % value
-      end
-    end
   end
 
-  newparam(:size) do
+  newproperty(:size) do
     desc "The volume size. Valid format is [0-9]+[MGT]"
     validate do |value|
       unless value =~ /^\d+[MGT]$/
