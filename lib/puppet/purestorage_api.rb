@@ -27,54 +27,47 @@ class PureStorageApi
   DELETE            = "delete"
   LIST              = "list"
   
-  attr_accessor :url
-  
-  #------------------------------------------------------------------------------------
+  # #------------------------------------------------------------------------------------
+  # # Constructor
+  # #------------------------------------------------------------------------------------
+  # def initialize(url)
+  #   @url = URI.parse(url)
+  #   @deviceIp = @url.host
+  #   @userName = @url.user
+  #   @password = @url.password
+  #   @restVersion = REST_VERSION
+  #   #Base URI is ... https://m70.purecloud.local/api/1.6
+  #   @baseUri = "https://" + @deviceIp + "/api/"+@restVersion
+  #   @cacheService = CacheService.new(@deviceIp)
+
+  #   #Delete Cache if its expired.
+  #   if(@cacheService.isCacheExpired)
+  #    # puts "Cache is expired, hence deleting file :" + @deviceIp
+  #    Puppet.debug "Cache is expired, hence deleting file :" + @deviceIp
+  #     @cacheService.deleteCache()
+  #   end
+  # end
+
+  # -----------------------------------------------------------------------------------
   # Constructor
-  #------------------------------------------------------------------------------------
-  def initialize(url)
-    Puppet.debug("Device url : "+ url)
-    @url = URI.parse(url)
-    @deviceIp = @url.host
-    Puppet.debug("Device ip : "+ @deviceIp)
-    @userName = @url.user
-    Puppet.debug("Device user : "+ @userName)
-    @password = @url.password
-    Puppet.debug("Device password : "+ @password)
-    @restVersion = REST_VERSION
+  # -----------------------------------------------------------------------------------
+  def initialize(deviceIp,userName,password,restVersion)
+    @deviceIp = deviceIp
+    @userName = userName
+    @password = password
+    @restVersion = restVersion
     #Base URI is ... https://m70.purecloud.local/api/1.6
-    @baseUri = "https://" + @deviceIp + "/api/"+@restVersion
-    @cacheService = CacheService.new(@deviceIp)
-    
+    @baseUri = "https://" + deviceIp + "/api/"+restVersion
+    @cacheService = CacheService.new(deviceIp)
+
     #Delete Cache if its expired.
     if(@cacheService.isCacheExpired)
-     # puts "Cache is expired, hence deleting file :" + @deviceIp
-     Puppet.debug "Cache is expired, hence deleting file :" + @deviceIp
+    # puts "Cache is expired, hence deleting file :" + @deviceIp
+    Puppet.debug "Cache is expired, hence deleting file :" + @deviceIp
       @cacheService.deleteCache()
     end       
-  end 
-  #------------------------------------------------------------------------------------
-  # Constructor
-  #------------------------------------------------------------------------------------  
-#  def initialize(deviceIp,userName,password,restVersion)
-#    @deviceIp = deviceIp
-#    @userName = userName
-#    @password = password
-#    @restVersion = restVersion
-#    #Base URI is ... https://m70.purecloud.local/api/1.6
-#    @baseUri = "https://" + deviceIp + "/api/"+restVersion
-#    @cacheService = CacheService.new(deviceIp)
-#    
-#    #Delete Cache if its expired.
-#    if(@cacheService.isCacheExpired)
-#     # puts "Cache is expired, hence deleting file :" + @deviceIp
-#     Puppet.debug "Cache is expired, hence deleting file :" + @deviceIp
-#      @cacheService.deleteCache()
-#    end       
-#  end
-  
-  
-      
+  end
+
   #------------------------------------------------------------------------------------
   # Step 1 : Create Token 
   # e.g.
@@ -387,11 +380,11 @@ class PureStorageApi
     end      
   end
   
- #----------------------------------------------------
- # This method checks if volume with given name exists
- # It is dedicated to hosts
- #-----------------------------------------------
- def isHostExists(arg_host_name, arg_host_iqnlist)
+  #----------------------------------------------------
+  # This method checks if volume with given name exists
+  # It is dedicated to hosts
+  #-----------------------------------------------
+  def isHostExists(arg_host_name, arg_host_iqnlist)
     url = "/host/"+arg_host_name
     output = getRestCall(url)
     
@@ -400,47 +393,49 @@ class PureStorageApi
     else
        return false
     end
- end
- #-------------------------------------------------
- # Its a controller method which decides 
- # which rest api to call depending on key
- # It is dedicated to Hosts
- #-----------------------------------------------
- def executeHostRestApi(arg_key,*arg)
-   Puppet.info(arg_key + " Action for host:"+ arg[0])
-   case arg_key
-   when LIST  then
-     getRestCall("/host")
-   when  CREATE then #arg[0] = volume_name, arg[1] = volume_size
-       url = "/host/"+arg[0]
-       body = Hash.new("iqnlist" => arg[1])
-       postRestCall(url,body["iqnlist"])
-   when  UPDATE then
-       url = "/host/"+arg[0]
-       body = Hash.new("iqnlist" => arg[1]) 
-       putRestCall(url,body["iqnlist"])
-   when  DELETE then
-       url = "/host/"+arg[0]
-       deleteRestCall(url)
-   else
-     Puppet.err("Invalid Option:" + arg_key)
-   end      
- end 
- 
-#----------------------------------------------------
-# This method checks if connection with given name exists
-# It is dedicated to volumes
-# -----------------------------------------------
-def isConnectionExists(arg_host_name, arg_volume_name)
-   url = "/host/"+arg_host_name+"/volume"
-   output = getRestCall(url)
+  end
 
-   if(output["vol"]!=nil)
-     return true
-   else
-      return false
-   end
-end
+  #-------------------------------------------------
+  # Its a controller method which decides
+  # which rest api to call depending on key
+  # It is dedicated to Hosts
+  #-----------------------------------------------
+  def executeHostRestApi(arg_key,*arg)
+    Puppet.info(arg_key + " Action for host:"+ arg[0])
+    case arg_key
+    when LIST  then
+      getRestCall("/host")
+    when  CREATE then #arg[0] = volume_name, arg[1] = volume_size
+      url = "/host/"+arg[0]
+      body = Hash.new("iqnlist" => arg[1], "wwnlist" => arg[2])
+      postRestCall(url,body)
+    when  UPDATE then
+      url = "/host/"+arg[0]
+      body = Hash.new("iqnlist" => arg[1], "wwnlist" => arg[2])
+      putRestCall(url,body)
+    when  DELETE then
+      url = "/host/"+arg[0]
+      deleteRestCall(url)
+    else
+      Puppet.err("Invalid Option:" + arg_key)
+    end
+  end
+ 
+  #----------------------------------------------------
+  # This method checks if connection with given name exists
+  # It is dedicated to volumes
+  # -----------------------------------------------
+  def isConnectionExists(arg_host_name, arg_volume_name)
+     url = "/host/"+arg_host_name+"/volume"
+     output = getRestCall(url)
+
+     if(output["vol"]!=nil)
+       return true
+     else
+        return false
+     end
+  end
+
   #-------------------------------------------------
   # Its a controller method which decides 
   # which rest api to call depending on key
