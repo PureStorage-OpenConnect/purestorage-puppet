@@ -1,5 +1,7 @@
 ## Pure Storage Puppet Module
 
+Download from Puppet Forge at https://forge.puppet.com/purestorage/purefa
+
 #### Table of Contents
 
   1. [Disclaimer](#disclaimer)
@@ -17,15 +19,15 @@
 
 ## Disclaimer
 
-This provider is written as best effort and provides no warranty expressed or
+This Puppet module is written as a best effort and provides no warranty expressed or
 implied. Please contact the author(s) via [Pure Storage Support Team](https://www.purestorage.com/support.html) if you have
 questions about this module before running or modifying.
 
 ## Overview
 
-The Pure Storage provider allows you to provision volumes on a Pure Storage array
+The Pure Storage Puppet module allows you to provision volumes on a Pure Storage FlashArray
 from either a puppet client or a puppet device proxy host. The provider has
-been developed against CentOS 7.2 using Puppet-4.8.1. At this stage testing
+been developed against CentOS 7.2 using Puppet-4.8.1. At this stage, testing
 is completely manual.
 
 ## Description
@@ -39,9 +41,9 @@ array to remotely provision the necessary resources.
 
 ## Setup
 
-### Connecting to a Pure Storage Array
+### Connecting to a Pure Storage FlashArray
 
-A connection to a Pure Storage array is via the storage array IP address 
+A connection to a Pure Storage FlashArray is via the storage array IP address 
 or FQDN name of the storage array and through use of a Admin account. 
 A connection string is needed to inform the providers how to connect. 
 The providers can get the connection string from various locations 
