@@ -1,3 +1,7 @@
+# DEPRECATED
+This repo has been deprecated and no future support or development will take place.
+The preferred automation platform for Pure Storage is [Ansible](https://github.com/Pure-Storage-Ansible)
+
 ## Pure Storage Puppet Module
 
 Download from Puppet Forge at https://forge.puppet.com/purestorage/purefa
